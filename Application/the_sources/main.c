@@ -6,5 +6,11 @@
 
 int main(){
 
+    uint64_t pixel = 255;
+    rgb couleur = calculpixels(pixel);
+    printf("rouge = %lui\n",couleur.red);
+    printf("vert = %lui\n",couleur.green);
+    printf("bleu = %lui\n",couleur.blue);
+
 }
 
