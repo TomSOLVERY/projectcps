@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<stdlib.h>
 #include<stdint.h>
 #include <math.h>
 #include "traitement.h"
@@ -17,7 +18,8 @@ rgb calculpixels(uint64_t pixels){
 
 image binarisation(image img,float alpha){
     if((img.magicnumber != P3)||(alpha > 1.0 || alpha < 0.0)){
-        return NULL;
+        printf("Erreur sur la binarisation. Type Image doit etre P3 et alpha entre 0 et 1");
+        exit(-1);
     }
     float val;
     rgb c;
