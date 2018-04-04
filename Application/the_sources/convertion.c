@@ -18,7 +18,7 @@ rgb pixel_to_rgb(uint64_t pixel)
 
 
 
-image P3_to_P2(image imgP3, char *nom_P3)
+image P3_to_P2(image imgP3)
 {
   image imgP2;
   imgP2.magicnumber = P2;
