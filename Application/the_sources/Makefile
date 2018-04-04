@@ -14,7 +14,6 @@ $(EXEC) : 	$(OBJS)
 
 clean : 
 		@echo "On efface les fichiers objets"
-		
 		rm -f *.o
 
 mrproper :	clean
