@@ -5,6 +5,8 @@
 #include "openandsave.h"
 #include "convertion.h"
 
+#define ALPHA 0.2
+
 int main(int argc,char **argv){
   image imgP3;
   char temp[] = "temp";
@@ -14,15 +16,17 @@ int main(int argc,char **argv){
     printf("\nPas de fichier fourni ou mauvais nom de fichier. On travaille sur l'entree standart\n");
     stdin_to_P3(temp);
     imgP3 = P3Lecture(temp);
-    image imgP2 = P3_to_P2(imgP3, temp);
+    image imgP2 = P3_to_P2(imgP3);
     save(imgP2, temp, 1);
     remove(temp);
   }
   else
   {
   image imgP3 = P3Lecture(argv[1]);
-  image imgP2 = P3_to_P2(imgP3, argv[1]);
+  image imgP2 = P3_to_P2(imgP3);
+  image imgP1 = binarisation(imgP3,ALPHA);
   save(imgP2, argv[1], 0);
+  save(imgP1,argv[1],0);
   }
 }
 
