@@ -4,31 +4,61 @@
 #include "openandsave.h"
 #include "projet.h"
 
-uint64_t rgb_to_pixel (rgb colours){  
+#define BUF_SIZE 1024
+
+uint64_t rgb_to_pixel(rgb colours)
+{
   uint64_t pixel = 0;
   pixel |= colours.red;
-  pixel = (pixel << 16); 
+  pixel = (pixel << 16);
   pixel |= colours.green;
   pixel = (pixel << 16);
   pixel |= colours.blue;
   return pixel;
 }
 
-image P3Lecture (char *nom_image){
+void stdin_to_P3(char *temp)
+{
+  if (feof(stdin))
+    printf("stdin reached eof\n");
+
+  void *content = malloc(BUF_SIZE);
+
+  FILE *fp = fopen(temp, "w");
+
+  if (fp == 0)
+    printf("...something went wrong opening file...\n");
+
+  int read;
+  while ((read = fread(content, 1, BUF_SIZE, stdin)))
+  {
+    fwrite(content, read, 1, fp);
+  }
+  if (ferror(stdin))
+    printf("There was an error reading from stdin");
+
+  printf("\nDone writing\n");
+
+  fclose(fp);
+}
+
+image P3Lecture(char *nom_image)
+{
   FILE *f;
   int entier;
   char c;
   image img;
   rgb colours;
-    
+
   f = fopen(nom_image, "r");
-    
+
   fscanf(f, "%c", &c);
   fscanf(f, "%d", &entier);
 
-  if (entier != 3){ 
+  if (entier != 3)
+  {
     printf("Erreur, l'image n'est pas de type PPM P3");
-    exit (-1);
+    exit(-1);
   }
   img.magicnumber = P3;
   fscanf(f, "%d", &entier);
@@ -41,61 +71,79 @@ image P3Lecture (char *nom_image){
   img.pixels = malloc(img.largeur * img.hauteur * sizeof(uint64_t));
 
   int i = 0;
-  while (fscanf (f, "%d", &entier) != EOF) {
+  while (fscanf(f, "%d", &entier) != EOF)
+  {
     colours.red = entier;
-    fscanf (f, "%d", &entier);
+    fscanf(f, "%d", &entier);
     colours.green = entier;
-    fscanf (f, "%d", &entier);
+    fscanf(f, "%d", &entier);
     colours.blue = entier;
-    img.pixels[i] = rgb_to_pixel (colours);
+    img.pixels[i] = rgb_to_pixel(colours);
     i++;
   }
-  fclose (f);
+  fclose(f);
   return img;
 }
 
-void save(image img, char *nom_original)
+void save(image img, char *nom_original, int stdin_bool)
 {
   FILE *f;
-  char nom[64];
+
   int i = 0;
-  while (nom_original[i] != '.')
+  if (!stdin_bool)
   {
-    nom[i] = nom_original[i];
-    i++;
-  }
-  nom[i] = '.';
-  if (img.magicnumber == P2)
-  {
-    nom[i + 1] = 'p';
-    nom[i + 2] = 'g';
-    nom[i + 3] = 'm';
-  }
-  if (img.magicnumber == P1)
-  {
-    nom[i + 1] = 'p';
-    nom[i + 2] = 'b';
-    nom[i + 3] = 'm';
-  }
-
-  f = fopen(nom, "w");
-  img.magicnumber == P2 ? fprintf(f, "P2") : fprintf(f, "P1");
-  fprintf(f, "\n");
-  fprintf(f, "%u", img.largeur);
-  fprintf(f, "\t");
-  fprintf(f, "%u", img.hauteur);
-  fprintf(f, "\n");
-  fprintf(f, "%u", img.maxpixel);
-  fprintf(f, "\n");
-  for (int i = 0; i < img.hauteur; i++)
-  {
-    for (int j = 0; j < img.largeur; j++)
+    char nom[64];
+    while (nom_original[i] != '.')
     {
-      fprintf(f, "%lu", img.pixels[(i * img.largeur) + j]);
-      fprintf(f, "\t");
+      nom[i] = nom_original[i];
+      i++;
     }
-    fprintf(f, "\n");
+    nom[i] = '.';
+    if (img.magicnumber == P2)
+    {
+      nom[i + 1] = 'p';
+      nom[i + 2] = 'g';
+      nom[i + 3] = 'm';
+      nom[i + 4] = 0;
+    }
+    else if (img.magicnumber == P1)
+    {
+      nom[i + 1] = 'p';
+      nom[i + 2] = 'b';
+      nom[i + 3] = 'm';
+      nom[i + 4] = 0;
+    }
+    f = fopen(nom, "w");
+  } 
+  else
+  {
+    if (img.magicnumber == P2)
+    {
+      char nom [] = "image.pgm";
+      f = fopen(nom, "w");
+    }
+    else if (img.magicnumber == P1)
+    {
+      char nom [] = "image.pbm";
+      f = fopen(nom, "w");
+    }
   }
-  fclose(f);
-}
-
+    img.magicnumber == P2 ? fprintf(f, "P2") : fprintf(f, "P1");
+    fprintf(f, "\n");
+    fprintf(f, "%u", img.largeur);
+    fprintf(f, "\t");
+    fprintf(f, "%u", img.hauteur);
+    fprintf(f, "\n");
+    fprintf(f, "%u", img.maxpixel);
+    fprintf(f, "\n");
+    for (i = 0; i < img.hauteur; i++)
+    {
+      for (int j = 0; j < img.largeur; j++)
+      {
+        fprintf(f, "%lu", img.pixels[(i * img.largeur) + j]);
+        fprintf(f, "\t");
+      }
+      fprintf(f, "\n");
+    }
+    fclose(f);
+  }

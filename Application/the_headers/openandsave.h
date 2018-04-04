@@ -3,7 +3,8 @@
 #include "projet.h"
 
 uint64_t rgb_to_pixel(rgb);
-void save(image,char*);
+void stdin_to_P3 (char *);
+void save(image, char *, int);
 image P3Lecture (char *);
 
 #endif
