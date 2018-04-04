@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include "openandsave.h"
 #include "projet.h"
 
@@ -52,3 +53,49 @@ image P3Lecture (char *nom_image){
   fclose (f);
   return img;
 }
+
+void save(image img, char *nom_original)
+{
+  FILE *f;
+  char nom[64];
+  int i = 0;
+  while (nom_original[i] != '.')
+  {
+    nom[i] = nom_original[i];
+    i++;
+  }
+  nom[i] = '.';
+  if (img.magicnumber == P2)
+  {
+    nom[i + 1] = 'p';
+    nom[i + 2] = 'g';
+    nom[i + 3] = 'm';
+  }
+  if (img.magicnumber == P1)
+  {
+    nom[i + 1] = 'p';
+    nom[i + 2] = 'b';
+    nom[i + 3] = 'm';
+  }
+
+  f = fopen(nom, "w");
+  img.magicnumber == P2 ? fprintf(f, "P2") : fprintf(f, "P1");
+  fprintf(f, "\n");
+  fprintf(f, "%u", img.largeur);
+  fprintf(f, "\t");
+  fprintf(f, "%u", img.hauteur);
+  fprintf(f, "\n");
+  fprintf(f, "%u", img.maxpixel);
+  fprintf(f, "\n");
+  for (int i = 0; i < img.hauteur; i++)
+  {
+    for (int j = 0; j < img.largeur; j++)
+    {
+      fprintf(f, "%lu", img.pixels[(i * img.largeur) + j]);
+      fprintf(f, "\t");
+    }
+    fprintf(f, "\n");
+  }
+  fclose(f);
+}
+
