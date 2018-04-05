@@ -19,4 +19,3 @@ clean :
 
 mrproper :	clean
 			rm -f $(OUTPUT_DIR)/$(EXEC)
-			rm -f temp

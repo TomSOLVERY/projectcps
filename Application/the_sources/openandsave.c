@@ -22,7 +22,7 @@ void stdin_to_P3(char *temp)
   if (feof(stdin))
     printf("stdin reached eof\n");
 
-  void *content = malloc(BUF_SIZE);
+  void *content = malloc(BUF_SIZE*sizeof(char));
 
   FILE *fp = fopen(temp, "w");
 
