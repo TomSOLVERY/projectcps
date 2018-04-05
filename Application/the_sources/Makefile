@@ -1,13 +1,14 @@
 CC=gcc
 EXEC = projet
+OUTPUT_DIR = ../bin
 CFLAGS = -Wall -I ../the_headers
 SRCS = $(wildcard *.c)
 OBJS = $(SRCS: .c=.o)
 
-all : 	$(EXEC)
+all : 	$(OUTPUT_DIR)/$(EXEC)
 
-$(EXEC) : 	$(OBJS)
-			$(CC) $(CFLAGS) -o $(EXEC) $(OBJS) -lm
+$(OUTPUT_DIR)/$(EXEC) : 	$(OBJS)
+			$(CC) $(CFLAGS) -o $@ $(OBJS) -lm
 	
 %.o: %.c
 	$(CC) -o $@ -c $^ $(CFLAGS)
