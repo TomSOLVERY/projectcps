@@ -92,26 +92,29 @@ void save(image img, char *nom_original, int stdin_bool)
   int i = 0;
   if (!stdin_bool)
   {
-    char nom[64];
-    while (nom_original[i] != '.')
+    char nom[128];
+    while (nom_original[i] != 0)
     {
       nom[i] = nom_original[i];
       i++;
     }
-    nom[i] = '.';
-    if (img.magicnumber == P2)
+    if(nom[i-1] != 'm' || nom[i-2] != 'p' || nom[i-3] != 'p' || nom[i-4] != '.'){
+      fprintf(stderr,"Erreur extension du fichier incorrect\n");
+      exit(-1);
+    }
+    if (img.magicnumber == P2) 
     {
-      nom[i + 1] = 'p';
-      nom[i + 2] = 'g';
-      nom[i + 3] = 'm';
-      nom[i + 4] = 0;
+      nom[i - 3] = 'p';
+      nom[i - 2] = 'g';
+      nom[i - 1] = 'm';
+      nom[i] = 0;
     }
     else if (img.magicnumber == P1)
     {
-      nom[i + 1] = 'p';
-      nom[i + 2] = 'b';
-      nom[i + 3] = 'm';
-      nom[i + 4] = 0;
+      nom[i - 3] = 'p';
+      nom[i - 2] = 'b';
+      nom[i - 1] = 'm';
+      nom[i] = 0;
     }
     f = fopen(nom, "w");
   } 

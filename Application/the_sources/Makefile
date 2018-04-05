@@ -18,4 +18,5 @@ clean :
 		rm -f *.o
 
 mrproper :	clean
-			rm -f $(EXEC)
+			rm -f $(OUTPUT_DIR)/$(EXEC)
+			rm -f temp

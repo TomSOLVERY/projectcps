@@ -9,7 +9,7 @@
 
 int main(int argc,char **argv){
   image imgP3, imgP2, imgP1;
-  char temp[] = "temp";
+  char temp[] = "image.ppm";
   if (argc == 1 || (fopen(argv[1], "r") == NULL))
   {
     printf("\n =======");
